@@ -2,7 +2,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Lexend', sans-serif;  /* Use Lexend Light font here */
 }
 
 /* Map Container */
@@ -26,6 +26,7 @@ body {
     z-index: 1000;
     font-size: 20px; /* Increased text size */
     line-height: 1.6;
+    font-family: 'Lexend', sans-serif;  /* Apply Lexend Light font to sidebar */
 }
 
 #sidebar h1 {
@@ -48,6 +49,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     font-size: 18px;
+    font-family: 'Lexend', sans-serif;  /* Apply Lexend Light font to buttons */
 }
 
 #sidebar button:hover {
@@ -57,11 +59,13 @@ body {
 #details h3 {
     font-size: 22px; /* Larger section titles */
     margin-bottom: 10px;
+    font-family: 'Lexend', sans-serif;  /* Apply Lexend Light font to buttons */
 }
 
 #details p {
     font-size: 18px; /* Increased text size for details */
     margin: 5px 0;
+    font-family: 'Lexend', sans-serif;  /* Apply Lexend Light font to buttons */
 }
 
 /* Dark Mode */
