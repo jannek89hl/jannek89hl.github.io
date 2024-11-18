@@ -1,38 +1,72 @@
-/* General Styles */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
-
-/* Map Container */
-#map {
-    height: 100vh; /* Full-screen height */
-}
-
-/* Sidebar UI */
-#sidebar {
+#controls {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
+    top: 20px;
+    right: 20px;
     width: 300px;
+    padding: 15px;
+    background: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
 }
 
-#sidebar label {
-    display: block;
-    margin-top: 10px;
-}
-
-#sidebar input, #sidebar select, #sidebar button {
-    display: block;
-    margin-top: 5px;
+#controls h3 {
+    text-align: center;
+    color: #333;
     margin-bottom: 10px;
 }
 
-h4 {
-    margin-top: 20px;
+#controls .form-group {
+    margin-bottom: 15px;
+}
+
+#controls label {
+    font-weight: bold;
+    color: #555;
+}
+
+#controls input,
+#controls select,
+#controls button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#controls button {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#controls button:hover {
+    background-color: #0056b3;
+}
+
+#detonation-info {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#detonation-info ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+#detonation-info li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+#detonation-info li span {
+    display: block;
 }
