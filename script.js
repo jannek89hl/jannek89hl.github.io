@@ -55,69 +55,72 @@ function calculateRadii(yieldKt) {
     };
 }
 
-// Function to generate descriptions based on the radius
-function getExplosionDescription(radius) {
+// Function to generate descriptions based on the radius for each category
+
+// Fireball Radius: Describes the maximum size of the nuclear fireball
+function getFireballDescription(radius) {
     if (radius <= 10) {
-        return "A small fireball, intense but localized. It can cause severe burns to anyone within its immediate vicinity. If the detonation touches the ground, radioactive fallout will significantly increase, and all within the fireball radius will be vaporized.";
+        return "A small fireball, intense but localized. Anything inside the fireball is vaporized.";
     } else if (radius <= 30) {
-        return "A moderate fireball capable of causing serious burns and some blast injuries. The heat and pressure are extreme within this radius. If the detonation touches the ground, fallout will increase, and structures within this area could be severely damaged or destroyed.";
+        return "A moderate fireball capable of vaporizing everything within its radius. If it touches the ground, significant radioactive fallout will occur.";
     } else if (radius <= 50) {
-        return "A large fireball with the potential to cause severe burns over a wide area. The heat and concussive force could lead to life-threatening injuries. Fallout would be significant if it touches the ground, and it would vaporize everything within the fireball.";
+        return "A large fireball, capable of vaporizing anything within its range. Fallout from a ground detonation would be catastrophic.";
     } else if (radius <= 100) {
-        return "An immense fireball with catastrophic potential, capable of causing severe burns and blast injuries over a large area. It could obliterate structures and generate intense fallout if it touches the ground. All within this range would likely be vaporized.";
-    } else if (radius <= 200) {
-        return "A massive explosion, devastating everything within its reach. Severe burns, blast damage, and structural destruction would occur. Fallout is a major concern if it touches the ground, affecting areas far beyond the initial blast.";
+        return "An immense fireball with catastrophic potential. It would vaporize everything within this zone and cause massive fallout if detonated near the ground.";
     } else {
-        return "The ultimate devastation, causing widespread destruction. Buildings, people, and infrastructure within this range are completely obliterated, with significant fallout and radiation contamination spreading over vast distances.";
+        return "A massive explosion, devastating everything within its reach. All in this range will be vaporized, and radioactive fallout would spread extensively.";
     }
 }
 
-// Additional detailed descriptions for other blast radii
+// Heavy Blast Radius: Describes the effects of a blast at 20 psi overpressure
 function getHeavyBlastDescription(radius) {
     if (radius <= 10) {
-        return "At 20 psi overpressure, there is minimal damage, but fatalities can occur from blast injuries if close to the detonation point.";
+        return "At 20 psi overpressure, the blast will cause significant damage to buildings and fatalities are highly probable.";
     } else if (radius <= 30) {
-        return "At 20 psi overpressure, heavily built concrete buildings are severely damaged or demolished; fatalities approach 100%. This is often used as a benchmark for heavy damage in cities.";
+        return "At 20 psi, concrete buildings will be severely damaged or demolished; fatalities are nearly 100%. This zone represents heavy damage in urban areas.";
     } else if (radius <= 50) {
-        return "At 20 psi overpressure, this area will see major structural damage, fatalities are widespread, and most buildings will collapse or suffer catastrophic damage.";
+        return "At 20 psi overpressure, most buildings in this radius will collapse. There will be major casualties and the area will be completely obliterated.";
     } else if (radius <= 100) {
-        return "At 20 psi overpressure, this zone will experience total destruction of buildings, and few survivors will remain. The blast is intense enough to demolish heavily built structures.";
+        return "A blast of 20 psi will cause total destruction to everything within this radius, with heavy structural damage and almost no survivors.";
     } else {
-        return "The heavy blast zone at this range ensures total destruction. Concrete, steel, and other materials are obliterated. Few, if any, structures survive.";
+        return "This area is within the maximum heavy blast zone. Structures are completely demolished, and the area is uninhabitable.";
     }
 }
 
+// Moderate Blast Radius: Describes the effects of a blast at 5 psi overpressure
 function getModerateBlastDescription(radius) {
     if (radius <= 10) {
-        return "At 5 psi overpressure, light structural damage is expected, with injuries being non-fatal but widespread.";
+        return "At 5 psi overpressure, there will be light damage to buildings, and injuries will be widespread but non-lethal.";
     } else if (radius <= 30) {
-        return "At 5 psi overpressure, most residential buildings collapse, injuries are universal, and fatalities are widespread. The chance of fire starting due to damage is high, and buildings are at risk of spreading fire.";
+        return "At 5 psi overpressure, most residential buildings will collapse. Widespread injuries and fatalities are common, with fire hazards high.";
     } else if (radius <= 50) {
-        return "At 5 psi overpressure, nearly all buildings in this area collapse or suffer heavy damage. Fires start in many structures, and there is a high chance of injury or death due to debris and collapse.";
+        return "At 5 psi overpressure, nearly all buildings in this area will collapse or suffer significant damage. Fires will spread, and casualties are inevitable.";
     } else if (radius <= 100) {
-        return "At 5 psi overpressure, nearly all buildings collapse, fires spread rapidly, and injuries are almost universal. Recovery in this zone is virtually impossible.";
+        return "Buildings in this radius will be heavily damaged, and nearly all people in this zone will suffer injuries or fatalities. Fires and structural damage will be widespread.";
     } else {
-        return "Massive structural damage at 5 psi, with widespread fatalities. Fires are nearly guaranteed, and the area is completely uninhabitable.";
+        return "Complete destruction and high fatalities. Fires will spread rapidly, and there is no chance of survival for most within this radius.";
     }
 }
 
+// Thermal Radiation Radius: Describes the effects of thermal radiation (third-degree burns)
 function getThermalRadiationDescription(radius) {
     if (radius <= 10) {
-        return "Within this radius, severe third-degree burns are a certainty for anyone exposed. These burns destroy all layers of skin, causing permanent scarring or requiring amputation.";
+        return "Within this radius, third-degree burns are a certainty. These burns destroy all layers of skin, often requiring amputation.";
     } else if (radius <= 30) {
-        return "In this zone, third-degree burns extend throughout the layers of skin, causing permanent damage and often leading to amputations. Survivors face a long road to recovery.";
+        return "Third-degree burns will extend throughout the layers of skin, causing permanent damage and often leading to amputations.";
     } else if (radius <= 50) {
-        return "Third-degree burns are widespread in this radius, and most exposed individuals will suffer irreversible damage to skin, muscle, and tissue. Immediate medical care is essential for survival.";
+        return "Third-degree burns are widespread, and most exposed individuals will suffer irreversible skin, muscle, and tissue damage.";
     } else if (radius <= 100) {
-        return "In this thermal radiation zone, third-degree burns are almost guaranteed for anyone within sight of the explosion. The damage to the skin and underlying tissues will be catastrophic, and many will not survive without immediate medical intervention.";
+        return "Thermal radiation at this distance will cause severe third-degree burns across the body, and survival without immediate medical intervention is unlikely.";
     } else {
-        return "Anyone within this zone will suffer third-degree burns. Survival chances are minimal, and those who do survive will face life-altering consequences due to the severity of the injuries.";
+        return "Anyone within this zone will suffer third-degree burns. The damage to the skin and underlying tissues will be catastrophic, and few will survive.";
     }
 }
 
+// Light Blast Radius: Describes the effects of the blast at around 1 psi overpressure (shattering windows)
 function getLightBlastDescription(radius) {
     if (radius <= 10) {
-        return "At around 1 psi overpressure, glass windows may break. People inside buildings may experience injuries from flying glass shards.";
+        return "At 1 psi overpressure, glass windows may break. People inside buildings may experience injuries from flying glass shards.";
     } else if (radius <= 30) {
         return "At 1 psi overpressure, windows will shatter, causing injuries from flying glass. Casualties will rise sharply due to the risk of cuts and trauma from shattered glass.";
     } else if (radius <= 50) {
@@ -126,6 +129,23 @@ function getLightBlastDescription(radius) {
         return "The light blast radius will see widespread window damage and numerous injuries. Many people will be hurt by flying glass and debris, often with broken limbs or cuts from sharp glass.";
     } else {
         return "A wide area will be affected by shattered glass. People who venture out into the open will be at great risk of injury from the debris.";
+    }
+}
+
+// The main function to determine the description based on radius
+function getExplosionDescription(radius, type) {
+    if (type === 'fireball') {
+        return getFireballDescription(radius);
+    } else if (type === 'heavyBlast') {
+        return getHeavyBlastDescription(radius);
+    } else if (type === 'moderateBlast') {
+        return getModerateBlastDescription(radius);
+    } else if (type === 'thermalRadiation') {
+        return getThermalRadiationDescription(radius);
+    } else if (type === 'lightBlast') {
+        return getLightBlastDescription(radius);
+    } else {
+        return "Unknown radius type.";
     }
 }
 
