@@ -1,72 +1,57 @@
-#controls {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 300px;
-    padding: 15px;
-    background: #f7f7f7;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
-    font-size: 14px;
 }
 
-#controls h3 {
-    text-align: center;
-    color: #333;
+/* Map Container */
+#map {
+    height: 100vh;
+    width: calc(100vw - 350px); /* Sidebar takes up 350px */
+    margin-left: 350px;
+}
+
+/* Sidebar */
+#sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 350px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+#sidebar h1 {
+    font-size: 20px;
     margin-bottom: 10px;
 }
 
-#controls .form-group {
-    margin-bottom: 15px;
-}
-
-#controls label {
+#sidebar label {
     font-weight: bold;
-    color: #555;
+    display: block;
+    margin: 10px 0 5px;
 }
 
-#controls input,
-#controls select,
-#controls button {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-#controls button {
-    background-color: #007bff;
+#sidebar button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #0078D7;
     color: white;
-    font-weight: bold;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-#controls button:hover {
-    background-color: #0056b3;
+#sidebar button:hover {
+    background-color: #005A9E;
 }
 
-#detonation-info {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-#detonation-info ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-#detonation-info li {
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-#detonation-info li span {
-    display: block;
+#details {
+    margin-top: 20px;
+    font-size: 14px;
 }
