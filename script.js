@@ -29,22 +29,46 @@ presetSelect.addEventListener("change", () => {
     customInput.style.display = presetSelect.value === "custom" ? "block" : "none";
 });
 
-// Explosion descriptions
-const explosionDescriptions = {
-    fireball: "A small but intense fireball that can cause severe burns to anyone within its immediate vicinity.",
-    heavyBlast: "Severe concussive force, potentially causing injuries like ruptured eardrums, internal damage, and knockdowns.",
-    moderateBlast: "Light structural damage, broken windows, and injuries from flying debris, including concussions or minor injuries.",
-    lightBlast: "Light damage to structures and potential for non-lethal injuries like minor cuts from debris, glass shattering.",
-};
+// Explosion descriptions based on radii
+function getExplosionDescriptions(yieldKt) {
+    if (yieldKt <= 0.001) {
+        return {
+            fireball: "A compact but intense fireball causing severe burns to anyone within close range.",
+            heavyBlast: "Strong concussive force, enough to shatter glass and rupture eardrums nearby.",
+            moderateBlast: "Moderate damage to structures, injuries from debris, and broken windows.",
+            thermalRadiation: "Severe burns to exposed skin within this radius.",
+            lightBlast: "Light structural damage and flying debris over a wide area.",
+        };
+    } else if (yieldKt <= 0.5) {
+        return {
+            fireball: "A powerful fireball capable of incinerating anything at its center.",
+            heavyBlast: "Severe concussive force, causing significant injuries and destruction to nearby buildings.",
+            moderateBlast: "Extensive damage to structures, with high risk of injuries from debris.",
+            thermalRadiation: "Serious burns to anyone within this large area of intense heat.",
+            lightBlast: "Minor damage to structures and widespread debris over a large area.",
+        };
+    } else {
+        return {
+            fireball: "An immense fireball that incinerates everything at its core.",
+            heavyBlast: "Massive concussive force, obliterating structures and causing severe injuries.",
+            moderateBlast: "Widespread damage to buildings and risk of injuries from falling debris.",
+            thermalRadiation: "Severe burns to anyone exposed within a large radius.",
+            lightBlast: "Damage to buildings and injuries caused by widespread debris and shockwaves.",
+        };
+    }
+}
 
 // Blast radius calculation
 function calculateRadii(yieldKt) {
-    const fireballRadius = 2 * Math.cbrt(yieldKt / 0.02); // Fireball radius (m)
-    const heavyBlastRadius = 6 * Math.cbrt(yieldKt / 0.02); // Heavy blast (20 psi)
-    const moderateBlastRadius = 10 * Math.cbrt(yieldKt / 0.02); // Moderate blast (5 psi)
-    const lightBlastRadius = 25 * Math.cbrt(yieldKt / 0.02); // Light blast (1 psi)
+    const baseRadii = {
+        fireballRadius: 5.58 * Math.cbrt(yieldKt / 0.001), // Fireball radius (m)
+        heavyBlastRadius: 21.8 * Math.cbrt(yieldKt / 0.001), // Heavy blast (20 psi)
+        moderateBlastRadius: 45.8 * Math.cbrt(yieldKt / 0.001), // Moderate blast (5 psi)
+        thermalRadiationRadius: 50.3 * Math.cbrt(yieldKt / 0.001), // Thermal radiation (3rd-degree burns)
+        lightBlastRadius: 118 * Math.cbrt(yieldKt / 0.001), // Light blast (1 psi)
+    };
 
-    return { fireballRadius, heavyBlastRadius, moderateBlastRadius, lightBlastRadius };
+    return baseRadii;
 }
 
 // Convert meters to pixels
@@ -55,14 +79,21 @@ function metersToPixels(meters) {
 
 // Draw circles and descriptions
 let drawnLayers = [];
-function drawCircles(center, radii) {
-    const { fireballRadius, heavyBlastRadius, moderateBlastRadius, lightBlastRadius } = radii;
+function drawCircles(center, radii, descriptions) {
+    const {
+        fireballRadius,
+        heavyBlastRadius,
+        moderateBlastRadius,
+        thermalRadiationRadius,
+        lightBlastRadius,
+    } = radii;
 
     const circles = [
-        { radius: fireballRadius, color: 'red', label: explosionDescriptions.fireball },
-        { radius: heavyBlastRadius, color: 'orange', label: explosionDescriptions.heavyBlast },
-        { radius: moderateBlastRadius, color: 'yellow', label: explosionDescriptions.moderateBlast },
-        { radius: lightBlastRadius, color: 'blue', label: explosionDescriptions.lightBlast },
+        { radius: fireballRadius, color: 'red', label: descriptions.fireball },
+        { radius: heavyBlastRadius, color: 'orange', label: descriptions.heavyBlast },
+        { radius: moderateBlastRadius, color: 'yellow', label: descriptions.moderateBlast },
+        { radius: thermalRadiationRadius, color: 'purple', label: descriptions.thermalRadiation },
+        { radius: lightBlastRadius, color: 'blue', label: descriptions.lightBlast },
     ];
 
     // Clear previous circles
@@ -98,14 +129,16 @@ detonateButton.addEventListener("click", () => {
 
     const center = marker.getLatLng();
     const radii = calculateRadii(yieldKt);
+    const descriptions = getExplosionDescriptions(yieldKt);
 
-    drawCircles(center, radii);
+    drawCircles(center, radii, descriptions);
 
     detailsDiv.innerHTML = `
         <h3>Explosion Details:</h3>
         <p><strong>Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m</p>
         <p><strong>Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m</p>
         <p><strong>Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m</p>
+        <p><strong>Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m</p>
         <p><strong>Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m</p>
     `;
 });
@@ -123,7 +156,8 @@ marker.on("move", () => {
         if (!isNaN(yieldKt) && yieldKt > 0) {
             const center = marker.getLatLng();
             const radii = calculateRadii(yieldKt);
-            drawCircles(center, radii);
+            const descriptions = getExplosionDescriptions(yieldKt);
+            drawCircles(center, radii, descriptions);
         }
     }
 });
