@@ -213,6 +213,7 @@ detailsDiv.innerHTML = `
 <p><strong class="light-blast-radius">Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m<br>
 <span class="light-blast-description">${getExplosionDescription(radii.lightBlastRadius, 'lightBlast')}</span></p>
 `;
+});
 
 // Clear button
 clearAllButton.addEventListener("click", () => {
