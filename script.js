@@ -16,7 +16,7 @@ map.fitBounds(bounds);
 const marker = L.marker([1100, 1100], { draggable: true }).addTo(map);
 marker.bindPopup("Drag me to set the explosion center!").openPopup();
 
-// GUI elements
+// Get GUI elements
 const presetSelect = document.getElementById("preset");
 const customInput = document.getElementById("custom-input");
 const customKtInput = document.getElementById("custom-kt");
@@ -26,18 +26,39 @@ const detailsDiv = document.getElementById("details");
 
 // Show/hide custom input
 presetSelect.addEventListener("change", () => {
-    customInput.style.display = presetSelect.value === "custom" ? "block" : "none";
+    if (presetSelect.value === "custom") {
+        customInput.style.display = "block";
+    } else {
+        customInput.style.display = "none";
+    }
 });
 
-// Explosion descriptions based on radii
+// Convert meters to pixels
+function metersToPixels(meters) {
+    const scale = 1.875; // 1.875 pixels per meter
+    return meters * scale;
+}
+
+// Calculate explosion radii based on yield (in kilotons)
+function calculateRadii(yieldKt) {
+    return {
+        fireballRadius: 5.58 * Math.cbrt(yieldKt / 0.001),
+        heavyBlastRadius: 21.8 * Math.cbrt(yieldKt / 0.001),
+        moderateBlastRadius: 45.8 * Math.cbrt(yieldKt / 0.001),
+        thermalRadiationRadius: 50.3 * Math.cbrt(yieldKt / 0.001),
+        lightBlastRadius: 118 * Math.cbrt(yieldKt / 0.001),
+    };
+}
+
+// Get explosion descriptions based on yield
 function getExplosionDescriptions(yieldKt) {
     if (yieldKt <= 0.001) {
         return {
-            fireball: "A compact but intense fireball causing severe burns to anyone within close range.",
-            heavyBlast: "Strong concussive force, enough to shatter glass and rupture eardrums nearby.",
-            moderateBlast: "Moderate damage to structures, injuries from debris, and broken windows.",
-            thermalRadiation: "Severe burns to exposed skin within this radius.",
-            lightBlast: "Light structural damage and flying debris over a wide area.",
+            fireball: "A small but intense fireball capable of causing severe burns within close range.",
+            heavyBlast: "Localized damage, including shattered glass and potential ruptured eardrums.",
+            moderateBlast: "Moderate damage, including broken windows and injuries from flying debris.",
+            thermalRadiation: "Potential for severe burns within this radius.",
+            lightBlast: "Minor injuries and light damage from shockwaves over a wider area.",
         };
     } else if (yieldKt <= 0.5) {
         return {
@@ -58,68 +79,18 @@ function getExplosionDescriptions(yieldKt) {
     }
 }
 
-// Blast radius calculation
-function calculateRadii(yieldKt) {
-    const baseRadii = {
-        fireballRadius: 5.58 * Math.cbrt(yieldKt / 0.001), // Fireball radius (m)
-        heavyBlastRadius: 21.8 * Math.cbrt(yieldKt / 0.001), // Heavy blast (20 psi)
-        moderateBlastRadius: 45.8 * Math.cbrt(yieldKt / 0.001), // Moderate blast (5 psi)
-        thermalRadiationRadius: 50.3 * Math.cbrt(yieldKt / 0.001), // Thermal radiation (3rd-degree burns)
-        lightBlastRadius: 118 * Math.cbrt(yieldKt / 0.001), // Light blast (1 psi)
-    };
+// Draw explosion circles on the map
+function drawCircles(center, radii) {
+    const { fireballRadius, heavyBlastRadius, moderateBlastRadius, thermalRadiationRadius, lightBlastRadius } = radii;
 
-    return baseRadii;
+    L.circle(center, { radius: metersToPixels(fireballRadius), color: 'red', fillOpacity: 0.5 }).addTo(map);
+    L.circle(center, { radius: metersToPixels(heavyBlastRadius), color: 'orange', fillOpacity: 0.4 }).addTo(map);
+    L.circle(center, { radius: metersToPixels(moderateBlastRadius), color: 'yellow', fillOpacity: 0.3 }).addTo(map);
+    L.circle(center, { radius: metersToPixels(thermalRadiationRadius), color: 'purple', fillOpacity: 0.2 }).addTo(map);
+    L.circle(center, { radius: metersToPixels(lightBlastRadius), color: 'blue', fillOpacity: 0.1 }).addTo(map);
 }
 
-// Convert meters to pixels
-function metersToPixels(meters) {
-    const scale = 60 / (160 * 0.2); // Pixels per meter
-    return meters * scale;
-}
-
-// Draw circles and descriptions
-let drawnLayers = [];
-function drawCircles(center, radii, descriptions) {
-    const {
-        fireballRadius,
-        heavyBlastRadius,
-        moderateBlastRadius,
-        thermalRadiationRadius,
-        lightBlastRadius,
-    } = radii;
-
-    const circles = [
-        { radius: fireballRadius, color: 'red', label: descriptions.fireball },
-        { radius: heavyBlastRadius, color: 'orange', label: descriptions.heavyBlast },
-        { radius: moderateBlastRadius, color: 'yellow', label: descriptions.moderateBlast },
-        { radius: thermalRadiationRadius, color: 'purple', label: descriptions.thermalRadiation },
-        { radius: lightBlastRadius, color: 'blue', label: descriptions.lightBlast },
-    ];
-
-    // Clear previous circles
-    clearCircles();
-
-    // Add circles
-    circles.forEach(({ radius, color, label }) => {
-        const circle = L.circle(center, {
-            radius: metersToPixels(radius),
-            color: color,
-            fillOpacity: 0.4,
-        }).addTo(map);
-        drawnLayers.push(circle);
-
-        // Add description popup
-        circle.bindPopup(`<strong>${label}</strong><br>Radius: ${radius.toFixed(1)} m`);
-    });
-}
-
-// Clear previous circles
-function clearCircles() {
-    drawnLayers.forEach(layer => map.removeLayer(layer));
-    drawnLayers = [];
-}
-
-// Detonate button click
+// Detonate button click handler
 detonateButton.addEventListener("click", () => {
     const yieldKt = presetSelect.value === "custom" ? parseFloat(customKtInput.value) : parseFloat(presetSelect.value);
     if (isNaN(yieldKt) || yieldKt <= 0) {
@@ -131,33 +102,29 @@ detonateButton.addEventListener("click", () => {
     const radii = calculateRadii(yieldKt);
     const descriptions = getExplosionDescriptions(yieldKt);
 
-    drawCircles(center, radii, descriptions);
+    drawCircles(center, radii);
 
     detailsDiv.innerHTML = `
         <h3>Explosion Details:</h3>
         <p><strong>Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m</p>
+        <p>${descriptions.fireball}</p>
         <p><strong>Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m</p>
+        <p>${descriptions.heavyBlast}</p>
         <p><strong>Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m</p>
+        <p>${descriptions.moderateBlast}</p>
         <p><strong>Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m</p>
+        <p>${descriptions.thermalRadiation}</p>
         <p><strong>Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m</p>
+        <p>${descriptions.lightBlast}</p>
     `;
 });
 
-// Clear all button
+// Clear all button click handler
 clearAllButton.addEventListener("click", () => {
-    clearCircles();
-    detailsDiv.innerHTML = "";
-});
-
-// Update circles on marker move
-marker.on("move", () => {
-    if (drawnLayers.length > 0) {
-        const yieldKt = presetSelect.value === "custom" ? parseFloat(customKtInput.value) : parseFloat(presetSelect.value);
-        if (!isNaN(yieldKt) && yieldKt > 0) {
-            const center = marker.getLatLng();
-            const radii = calculateRadii(yieldKt);
-            const descriptions = getExplosionDescriptions(yieldKt);
-            drawCircles(center, radii, descriptions);
+    map.eachLayer(layer => {
+        if (layer instanceof L.Circle) {
+            map.removeLayer(layer);
         }
-    }
+    });
+    detailsDiv.innerHTML = "";
 });
