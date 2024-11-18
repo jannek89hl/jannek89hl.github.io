@@ -24,36 +24,29 @@ body {
     box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
     z-index: 1000;
+    font-size: 18px; /* Increased text size */
 }
 
 #sidebar h1 {
-    font-size: 22px;
-    margin-bottom: 15px;
+    font-size: 24px;
+    margin-bottom: 10px;
 }
 
 #sidebar label {
-    font-size: 16px;
     font-weight: bold;
     display: block;
     margin: 10px 0 5px;
 }
 
-#sidebar select,
-#sidebar input {
-    font-size: 16px;
-    padding: 5px;
-    width: 100%;
-}
-
 #sidebar button {
     margin-top: 10px;
-    padding: 12px 20px;
-    font-size: 16px;
+    padding: 12px 25px;
     background-color: #0078D7;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
 }
 
 #sidebar button:hover {
@@ -62,5 +55,5 @@ body {
 
 #details {
     margin-top: 20px;
-    font-size: 16px;
+    font-size: 16px; /* Larger description text */
 }
