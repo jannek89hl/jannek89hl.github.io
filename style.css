@@ -126,3 +126,18 @@ body {
 .dark-mode #footer {
     color: #bbb;  /* Light gray text for footer */
 }
+
+/* Footer */
+#footer {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 14px;
+    color: gray;  /* Regular color for footer in light mode */
+    z-index: 1001;  /* Ensures it stays above map and other elements */
+}
+
+/* Footer in Dark Mode */
+.dark-mode #footer {
+    color: #bbb;  /* Lighter gray text for footer in dark mode */
+}
