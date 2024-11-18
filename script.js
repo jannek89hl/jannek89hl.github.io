@@ -199,21 +199,20 @@ detonateButton.addEventListener("click", () => {
 detailsDiv.innerHTML = `
 <h3>Explosion Details:</h3>
 <p><strong class="fireball-radius">Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m<br>
-<span class="fireball-description">${getExplosionDescription(radii.fireballRadius)}</span></p>
+<span class="fireball-description">${getExplosionDescription(radii.fireballRadius, 'fireball')}</span></p>
 
 <p><strong class="heavy-blast-radius">Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m<br>
-<span class="heavy-blast-description">${getExplosionDescription(radii.heavyBlastRadius)}</span></p>
+<span class="heavy-blast-description">${getExplosionDescription(radii.heavyBlastRadius, 'heavyBlast')}</span></p>
 
 <p><strong class="moderate-blast-radius">Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m<br>
-<span class="moderate-blast-description">${getExplosionDescription(radii.moderateBlastRadius)}</span></p>
+<span class="moderate-blast-description">${getExplosionDescription(radii.moderateBlastRadius, 'moderateBlast')}</span></p>
 
 <p><strong class="thermal-radiation-radius">Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m<br>
-<span class="thermal-radiation-description">${getExplosionDescription(radii.thermalRadiationRadius)}</span></p>
+<span class="thermal-radiation-description">${getExplosionDescription(radii.thermalRadiationRadius, 'thermalRadiation')}</span></p>
 
 <p><strong class="light-blast-radius">Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m<br>
-<span class="light-blast-description">${getExplosionDescription(radii.lightBlastRadius)}</span></p>
+<span class="light-blast-description">${getExplosionDescription(radii.lightBlastRadius, 'lightBlast')}</span></p>
 `;
-});
 
 // Clear button
 clearAllButton.addEventListener("click", () => {
