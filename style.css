@@ -59,14 +59,36 @@ body {
 #details h3 {
     font-size: 22px; /* Larger section titles */
     margin-bottom: 10px;
-    font-family: 'Lexend', sans-serif;  /* Apply Lexend Light font to buttons */
+    font-family: 'Lexend', sans-serif;  /* Apply Lexend Light font to details */
 }
 
+/* Set the description text to black */
 #details p {
     font-size: 18px; /* Increased text size for details */
     margin: 5px 0;
-    font-family: 'Lexend', sans-serif;  /* Apply Lexend Light font to buttons */
+    font-family: 'Lexend', sans-serif;  /* Apply Lexend Light font to details */
     color: black;  /* Make the description text black */
+}
+
+/* Specific color classes for each radius */
+.fireball-radius {
+    color: red;
+}
+
+.heavy-blast-radius {
+    color: orange;
+}
+
+.moderate-blast-radius {
+    color: #FFD700;
+}
+
+.thermal-radiation-radius {
+    color: purple;
+}
+
+.light-blast-radius {
+    color: blue;
 }
 
 /* Dark Mode */
@@ -87,6 +109,10 @@ body {
 .dark-mode #details {
     background-color: #444;  /* Darker details section */
     color: white;
+}
+
+.dark-mode #details p {
+    color: black;  /* Make the description text black in dark mode */
 }
 
 .dark-mode button {
