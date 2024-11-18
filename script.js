@@ -62,13 +62,13 @@ function getFireballDescription(radius) {
     if (radius <= 10) {
         return "A small fireball, intense but localized. Anything inside the fireball is vaporized.";
     } else if (radius <= 30) {
-        return "A moderate fireball capable of vaporizing everything within its radius. If it touches the ground, significant radioactive fallout will occur.";
+        return "A moderate fireball capable of vaporizing everything within its radius. If it touches the ground, significant fallout will occur.";
     } else if (radius <= 50) {
         return "A large fireball, capable of vaporizing anything within its range. Fallout from a ground detonation would be catastrophic.";
     } else if (radius <= 100) {
         return "An immense fireball with catastrophic potential. It would vaporize everything within this zone and cause massive fallout if detonated near the ground.";
     } else {
-        return "A massive explosion, devastating everything within its reach. All in this range will be vaporized, and radioactive fallout would spread extensively.";
+        return "A massive explosion, devastating everything within its reach. All in this range will be vaporized, and fallout would spread extensively.";
     }
 }
 
