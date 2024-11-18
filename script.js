@@ -13,7 +13,13 @@ L.imageOverlay(mapImagePath, bounds).addTo(map);
 map.fitBounds(bounds);
 
 // Marker setup
-const marker = L.marker([1100, 1100], { draggable: true }).addTo(map);
+const markerIcon = L.divIcon({
+    className: 'custom-marker',
+    html: '<div style="background-color: red; width: 20px; height: 20px; border-radius: 50%;"></div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+});
+const marker = L.marker([1100, 1100], { draggable: true, icon: markerIcon }).addTo(map);
 marker.bindPopup("Drag me to set the explosion center!").openPopup();
 
 // Get GUI elements
@@ -26,6 +32,7 @@ const detailsDiv = document.getElementById("details");
 
 // Explosion layers for updating
 let explosionLayers = [];
+let isExplosionActive = false;
 
 // Show/hide custom input
 presetSelect.addEventListener("change", () => {
@@ -53,14 +60,20 @@ function calculateRadii(yieldKt) {
     };
 }
 
-// Get explosion descriptions with colors
-function getExplosionDescriptions(yieldKt) {
+// Calculate area of a circle (km²)
+function calculateArea(radius) {
+    const areaInMeters = Math.PI * Math.pow(radius, 2);
+    return (areaInMeters / 1e6).toFixed(2); // Convert to km²
+}
+
+// Get explosion descriptions with colors and numerical details
+function getExplosionDescriptions(radii) {
     return `
-        <p><strong style="color: red;">Fireball Radius:</strong> A small but intense fireball capable of causing severe burns.</p>
-        <p><strong style="color: orange;">Heavy Blast Radius:</strong> Severe localized damage, including structural destruction.</p>
-        <p><strong style="color: yellow;">Moderate Blast Radius:</strong> Moderate damage to structures, with debris injuries likely.</p>
-        <p><strong style="color: purple;">Thermal Radiation Radius:</strong> Severe burns within this area of intense heat.</p>
-        <p><strong style="color: blue;">Light Blast Radius:</strong> Light structural damage and debris injuries over a wide area.</p>
+        <p><strong style="color: red;">Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m (${calculateArea(radii.fireballRadius)} km²)</p>
+        <p><strong style="color: orange;">Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m (${calculateArea(radii.heavyBlastRadius)} km²)</p>
+        <p><strong style="color: yellow;">Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m (${calculateArea(radii.moderateBlastRadius)} km²)</p>
+        <p><strong style="color: purple;">Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m (${calculateArea(radii.thermalRadiationRadius)} km²)</p>
+        <p><strong style="color: blue;">Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m (${calculateArea(radii.lightBlastRadius)} km²)</p>
     `;
 }
 
@@ -74,16 +87,21 @@ function drawCircles(center, radii) {
     explosionLayers.push(L.circle(center, { radius: metersToPixels(moderateBlastRadius), color: 'yellow', fillOpacity: 0.3 }).addTo(map));
     explosionLayers.push(L.circle(center, { radius: metersToPixels(thermalRadiationRadius), color: 'purple', fillOpacity: 0.2 }).addTo(map));
     explosionLayers.push(L.circle(center, { radius: metersToPixels(lightBlastRadius), color: 'blue', fillOpacity: 0.1 }).addTo(map));
+
+    isExplosionActive = true;
 }
 
 // Clear previous explosions
 function clearExplosions() {
     explosionLayers.forEach(layer => map.removeLayer(layer));
     explosionLayers = [];
+    isExplosionActive = false;
 }
 
 // Update explosion on marker drag
 marker.on('move', () => {
+    if (!isExplosionActive) return;
+
     const center = marker.getLatLng();
     const yieldKt = presetSelect.value === "custom" ? parseFloat(customKtInput.value) : parseFloat(presetSelect.value);
 
@@ -109,7 +127,7 @@ detonateButton.addEventListener("click", () => {
 
     detailsDiv.innerHTML = `
         <h3>Explosion Details:</h3>
-        ${getExplosionDescriptions(yieldKt)}
+        ${getExplosionDescriptions(radii)}
     `;
 });
 
