@@ -1,29 +1,38 @@
+/* General Styles */
 body {
-    display: flex;
+    margin: 0;
     font-family: Arial, sans-serif;
 }
 
-#map-container {
-    position: relative;
-}
-
+/* Map Container */
 #map {
-    width: 2200px;
-    height: 2200px;
+    height: 100vh; /* Full-screen height */
 }
 
-#marker {
+/* Sidebar UI */
+#sidebar {
     position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    border-radius: 50%;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    width: 300px;
 }
 
-#gui {
-    margin-left: 20px;
+#sidebar label {
+    display: block;
+    margin-top: 10px;
 }
 
-#blast-radii {
+#sidebar input, #sidebar select, #sidebar button {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+h4 {
     margin-top: 20px;
 }
