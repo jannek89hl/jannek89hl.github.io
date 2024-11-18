@@ -130,7 +130,7 @@ body {
 /* Footer */
 #footer {
     position: absolute;
-    bottom: 30px;
+    bottom: 20px;  /* Increase the value to move the text further down */
     right: 10px;
     font-size: 14px;
     color: gray;  /* Regular color for footer in light mode */
