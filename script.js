@@ -12,8 +12,13 @@ const mapImagePath = '10-5-24.png';
 L.imageOverlay(mapImagePath, bounds).addTo(map);
 map.fitBounds(bounds);
 
-// Marker setup
-const marker = L.marker([1100, 1100], { draggable: true }).addTo(map);
+// Marker setup with increased size
+const markerIcon = L.icon({
+    iconUrl: 'marker-icon.png', // Use a larger marker icon file here
+    iconSize: [48, 48], // Increased marker size
+    iconAnchor: [24, 48],
+});
+const marker = L.marker([1100, 1100], { draggable: true, icon: markerIcon }).addTo(map);
 marker.bindPopup("Drag me to set the explosion center!").openPopup();
 
 // GUI elements
@@ -99,11 +104,16 @@ detonateButton.addEventListener("click", () => {
 
     detailsDiv.innerHTML = `
         <h3>Explosion Details:</h3>
-        <p><strong style="color: red;">Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m</p>
-        <p><strong style="color: orange;">Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m</p>
-        <p><strong style="color: yellow;">Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m</p>
-        <p><strong style="color: purple;">Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m</p>
-        <p><strong style="color: blue;">Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m</p>
+        <p><strong style="color: red;">Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m<br>
+        A small but intense fireball that can cause severe burns to anyone within its immediate vicinity.</p>
+        <p><strong style="color: orange;">Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m<br>
+        Structures within this radius will likely experience total destruction due to the high-pressure blast.</p>
+        <p><strong style="color: yellow;">Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m<br>
+        Significant damage to buildings and severe injuries to individuals are likely.</p>
+        <p><strong style="color: purple;">Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m<br>
+        Third-degree burns can occur from intense thermal radiation.</p>
+        <p><strong style="color: blue;">Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m<br>
+        Windows may shatter, and light structural damage is possible.</p>
     `;
 });
 
