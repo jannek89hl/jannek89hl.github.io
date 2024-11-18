@@ -66,6 +66,7 @@ body {
     font-size: 18px; /* Increased text size for details */
     margin: 5px 0;
     font-family: 'Lexend', sans-serif;  /* Apply Lexend Light font to buttons */
+    color: black;  /* Make the description text black */
 }
 
 /* Dark Mode */
