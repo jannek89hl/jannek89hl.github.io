@@ -63,3 +63,35 @@ body {
     font-size: 18px; /* Increased text size for details */
     margin: 5px 0;
 }
+
+/* Dark Mode */
+.dark-mode {
+    background-color: #121212;  /* Black background */
+    color: white;  /* White text color for readability */
+}
+
+.dark-mode #map {
+    background-color: #2e2e2e;  /* Dark map background */
+}
+
+.dark-mode #sidebar {
+    background-color: #333;  /* Dark sidebar background */
+    color: white;
+}
+
+.dark-mode #details {
+    background-color: #444;  /* Darker details section */
+    color: white;
+}
+
+.dark-mode button {
+    background-color: #555;  /* Darker button background */
+}
+
+.dark-mode button:hover {
+    background-color: #777;  /* Lighter button on hover */
+}
+
+.dark-mode #footer {
+    color: #bbb;  /* Light gray text for footer */
+}
