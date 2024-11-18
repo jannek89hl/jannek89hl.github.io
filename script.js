@@ -55,6 +55,21 @@ function calculateRadii(yieldKt) {
     };
 }
 
+// Function to generate descriptions based on the radius
+function getExplosionDescription(radius) {
+    if (radius <= 10) {
+        return "A small fireball, intense but localized. It can cause severe burns to anyone within its immediate vicinity.";
+    } else if (radius <= 30) {
+        return "A moderate fireball, capable of causing serious burns and some blast injuries. The heat and pressure are extreme within this radius.";
+    } else if (radius <= 50) {
+        return "A large fireball with the potential to cause severe burns over a wide area. The heat and concussive force could lead to life-threatening injuries.";
+    } else if (radius <= 100) {
+        return "An immense fireball with catastrophic potential, capable of causing severe burns and blast injuries over a large area. It could obliterate structures.";
+    } else {
+        return "A massive explosion, devastating everything within its reach. Severe burns, blast damage, and structural destruction would occur within this range.";
+    }
+}
+
 // Draw explosion
 function drawExplosion(center, radii) {
     clearExplosions();
@@ -103,18 +118,18 @@ detonateButton.addEventListener("click", () => {
     drawExplosion(center, radii);
 
     detailsDiv.innerHTML = `
-        <h3>Explosion Details:</h3>
-        <p><strong style="color: red;">Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m<br>
-        A small but intense fireball that can cause severe burns to anyone within its immediate vicinity.</p>
-        <p><strong style="color: orange;">Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m<br>
-        Structures within this radius will likely experience total destruction due to the high-pressure blast.</p>
-        <p><strong style="color: yellow;">Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m<br>
-        Significant damage to buildings and severe injuries to individuals are likely.</p>
-        <p><strong style="color: purple;">Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m<br>
-        Third-degree burns can occur from intense thermal radiation.</p>
-        <p><strong style="color: blue;">Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m<br>
-        Windows may shatter, and light structural damage is possible.</p>
-    `;
+    <h3>Explosion Details:</h3>
+    <p><strong style="color: red;">Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m<br>
+    <span style="color: red;">${getExplosionDescription(radii.fireballRadius)}</span></p>
+    <p><strong style="color: orange;">Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m<br>
+    <span style="color: orange;">${getExplosionDescription(radii.heavyBlastRadius)}</span></p>
+    <p><strong style="color: yellow;">Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m<br>
+    <span style="color: yellow;">${getExplosionDescription(radii.moderateBlastRadius)}</span></p>
+    <p><strong style="color: purple;">Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m<br>
+    <span style="color: purple;">${getExplosionDescription(radii.thermalRadiationRadius)}</span></p>
+    <p><strong style="color: blue;">Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m<br>
+    <span style="color: blue;">${getExplosionDescription(radii.lightBlastRadius)}</span></p>
+`;
 });
 
 // Clear button
