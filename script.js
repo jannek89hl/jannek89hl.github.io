@@ -16,7 +16,7 @@ map.fitBounds(bounds);
 const marker = L.marker([1100, 1100], { draggable: true }).addTo(map);
 marker.bindPopup("Drag me to set the explosion center!").openPopup();
 
-// Get GUI elements
+// GUI elements
 const presetSelect = document.getElementById("preset");
 const customInput = document.getElementById("custom-input");
 const customKtInput = document.getElementById("custom-kt");
@@ -26,39 +26,66 @@ const detailsDiv = document.getElementById("details");
 
 // Show/hide custom input
 presetSelect.addEventListener("change", () => {
-    if (presetSelect.value === "custom") {
-        customInput.style.display = "block";
-    } else {
-        customInput.style.display = "none";
-    }
+    customInput.style.display = presetSelect.value === "custom" ? "block" : "none";
 });
+
+// Explosion descriptions
+const explosionDescriptions = {
+    fireball: "A small but intense fireball that can cause severe burns to anyone within its immediate vicinity.",
+    heavyBlast: "Severe concussive force, potentially causing injuries like ruptured eardrums, internal damage, and knockdowns.",
+    moderateBlast: "Light structural damage, broken windows, and injuries from flying debris, including concussions or minor injuries.",
+    lightBlast: "Light damage to structures and potential for non-lethal injuries like minor cuts from debris, glass shattering.",
+};
 
 // Blast radius calculation
 function calculateRadii(yieldKt) {
-    const fireballRadius = 67 * Math.cbrt(yieldKt / 0.5); // Fireball radius (m)
-    const heavyBlastRadius = 173 * Math.cbrt(yieldKt / 0.5); // Heavy blast (20 psi)
-    const moderateBlastRadius = 363 * Math.cbrt(yieldKt / 0.5); // Moderate blast (5 psi)
-    const thermalRadius = 399 * Math.cbrt(yieldKt / 0.5); // 3rd-degree burns
-    const lightBlastRadius = 930 * Math.cbrt(yieldKt / 0.5); // Light blast (1 psi)
+    const fireballRadius = 2 * Math.cbrt(yieldKt / 0.02); // Fireball radius (m)
+    const heavyBlastRadius = 6 * Math.cbrt(yieldKt / 0.02); // Heavy blast (20 psi)
+    const moderateBlastRadius = 10 * Math.cbrt(yieldKt / 0.02); // Moderate blast (5 psi)
+    const lightBlastRadius = 25 * Math.cbrt(yieldKt / 0.02); // Light blast (1 psi)
 
-    return { fireballRadius, heavyBlastRadius, moderateBlastRadius, thermalRadius, lightBlastRadius };
+    return { fireballRadius, heavyBlastRadius, moderateBlastRadius, lightBlastRadius };
 }
 
 // Convert meters to pixels
 function metersToPixels(meters) {
-    const scale = 160 / 60; // 160 studs = 60 pixels
+    const scale = 60 / (160 * 0.2); // Pixels per meter
     return meters * scale;
 }
 
-// Draw circles
+// Draw circles and descriptions
+let drawnLayers = [];
 function drawCircles(center, radii) {
-    const { fireballRadius, heavyBlastRadius, moderateBlastRadius, thermalRadius, lightBlastRadius } = radii;
+    const { fireballRadius, heavyBlastRadius, moderateBlastRadius, lightBlastRadius } = radii;
 
-    L.circle(center, { radius: metersToPixels(fireballRadius), color: 'red', fillOpacity: 0.5 }).addTo(map);
-    L.circle(center, { radius: metersToPixels(heavyBlastRadius), color: 'orange', fillOpacity: 0.4 }).addTo(map);
-    L.circle(center, { radius: metersToPixels(moderateBlastRadius), color: 'yellow', fillOpacity: 0.3 }).addTo(map);
-    L.circle(center, { radius: metersToPixels(thermalRadius), color: 'purple', fillOpacity: 0.2 }).addTo(map);
-    L.circle(center, { radius: metersToPixels(lightBlastRadius), color: 'blue', fillOpacity: 0.1 }).addTo(map);
+    const circles = [
+        { radius: fireballRadius, color: 'red', label: explosionDescriptions.fireball },
+        { radius: heavyBlastRadius, color: 'orange', label: explosionDescriptions.heavyBlast },
+        { radius: moderateBlastRadius, color: 'yellow', label: explosionDescriptions.moderateBlast },
+        { radius: lightBlastRadius, color: 'blue', label: explosionDescriptions.lightBlast },
+    ];
+
+    // Clear previous circles
+    clearCircles();
+
+    // Add circles
+    circles.forEach(({ radius, color, label }) => {
+        const circle = L.circle(center, {
+            radius: metersToPixels(radius),
+            color: color,
+            fillOpacity: 0.4,
+        }).addTo(map);
+        drawnLayers.push(circle);
+
+        // Add description popup
+        circle.bindPopup(`<strong>${label}</strong><br>Radius: ${radius.toFixed(1)} m`);
+    });
+}
+
+// Clear previous circles
+function clearCircles() {
+    drawnLayers.forEach(layer => map.removeLayer(layer));
+    drawnLayers = [];
 }
 
 // Detonate button click
@@ -79,17 +106,24 @@ detonateButton.addEventListener("click", () => {
         <p><strong>Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m</p>
         <p><strong>Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m</p>
         <p><strong>Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m</p>
-        <p><strong>Thermal Radiation Radius:</strong> ${radii.thermalRadius.toFixed(1)} m</p>
         <p><strong>Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m</p>
     `;
 });
 
 // Clear all button
 clearAllButton.addEventListener("click", () => {
-    map.eachLayer(layer => {
-        if (layer instanceof L.Circle) {
-            map.removeLayer(layer);
-        }
-    });
+    clearCircles();
     detailsDiv.innerHTML = "";
+});
+
+// Update circles on marker move
+marker.on("move", () => {
+    if (drawnLayers.length > 0) {
+        const yieldKt = presetSelect.value === "custom" ? parseFloat(customKtInput.value) : parseFloat(presetSelect.value);
+        if (!isNaN(yieldKt) && yieldKt > 0) {
+            const center = marker.getLatLng();
+            const radii = calculateRadii(yieldKt);
+            drawCircles(center, radii);
+        }
+    }
 });
