@@ -1,74 +1,95 @@
-// Function to detonate the bomb and calculate explosion radii with custom descriptions
-function detonate() {
-    const yieldValue = parseFloat(document.getElementById('yield').value);
-    if (isNaN(yieldValue) || yieldValue <= 0) {
-        alert("Please enter a valid Bomb Yield value.");
+// Initialize the map
+const map = L.map('map', {
+    crs: L.CRS.Simple,
+    minZoom: -2,
+    maxZoom: 2,
+});
+
+const bounds = [[0, 0], [2200, 2200]];
+const mapImagePath = '10-5-24.png';
+
+// Add the map image overlay
+L.imageOverlay(mapImagePath, bounds).addTo(map);
+map.fitBounds(bounds);
+
+// Marker setup
+const marker = L.marker([1100, 1100], { draggable: true }).addTo(map);
+marker.bindPopup("Drag me to set the explosion center!").openPopup();
+
+// Get GUI elements
+const presetSelect = document.getElementById("preset");
+const customInput = document.getElementById("custom-input");
+const customKtInput = document.getElementById("custom-kt");
+const detonateButton = document.getElementById("detonate");
+const clearAllButton = document.getElementById("clear-all");
+const detailsDiv = document.getElementById("details");
+
+// Show/hide custom input
+presetSelect.addEventListener("change", () => {
+    if (presetSelect.value === "custom") {
+        customInput.style.display = "block";
+    } else {
+        customInput.style.display = "none";
+    }
+});
+
+// Blast radius calculation
+function calculateRadii(yieldKt) {
+    const fireballRadius = 67 * Math.cbrt(yieldKt / 0.5); // Fireball radius (m)
+    const heavyBlastRadius = 173 * Math.cbrt(yieldKt / 0.5); // Heavy blast (20 psi)
+    const moderateBlastRadius = 363 * Math.cbrt(yieldKt / 0.5); // Moderate blast (5 psi)
+    const thermalRadius = 399 * Math.cbrt(yieldKt / 0.5); // 3rd-degree burns
+    const lightBlastRadius = 930 * Math.cbrt(yieldKt / 0.5); // Light blast (1 psi)
+
+    return { fireballRadius, heavyBlastRadius, moderateBlastRadius, thermalRadius, lightBlastRadius };
+}
+
+// Convert meters to pixels
+function metersToPixels(meters) {
+    const scale = 160 / 60; // 160 studs = 60 pixels
+    return meters * scale;
+}
+
+// Draw circles
+function drawCircles(center, radii) {
+    const { fireballRadius, heavyBlastRadius, moderateBlastRadius, thermalRadius, lightBlastRadius } = radii;
+
+    L.circle(center, { radius: metersToPixels(fireballRadius), color: 'red', fillOpacity: 0.5 }).addTo(map);
+    L.circle(center, { radius: metersToPixels(heavyBlastRadius), color: 'orange', fillOpacity: 0.4 }).addTo(map);
+    L.circle(center, { radius: metersToPixels(moderateBlastRadius), color: 'yellow', fillOpacity: 0.3 }).addTo(map);
+    L.circle(center, { radius: metersToPixels(thermalRadius), color: 'purple', fillOpacity: 0.2 }).addTo(map);
+    L.circle(center, { radius: metersToPixels(lightBlastRadius), color: 'blue', fillOpacity: 0.1 }).addTo(map);
+}
+
+// Detonate button click
+detonateButton.addEventListener("click", () => {
+    const yieldKt = presetSelect.value === "custom" ? parseFloat(customKtInput.value) : parseFloat(presetSelect.value);
+    if (isNaN(yieldKt) || yieldKt <= 0) {
+        alert("Please enter a valid yield.");
         return;
     }
 
-    const scalingFactor = 0.533; // 1 pixel = 0.533 meters (scaled to map)
+    const center = marker.getLatLng();
+    const radii = calculateRadii(yieldKt);
 
-    // Explosion radii in meters
-    const fireballRadius = 67 * Math.cbrt(yieldValue) * scalingFactor;
-    const heavyBlastRadius = 173 * Math.cbrt(yieldValue) * scalingFactor;
-    const moderateBlastRadius = 363 * Math.cbrt(yieldValue) * scalingFactor;
-    const thermalRadius = 399 * Math.cbrt(yieldValue) * scalingFactor;
-    const lightBlastRadius = 930 * Math.cbrt(yieldValue) * scalingFactor;
+    drawCircles(center, radii);
 
-    clearExplosionCircles(); // Clear existing circles
+    detailsDiv.innerHTML = `
+        <h3>Explosion Details:</h3>
+        <p><strong>Fireball Radius:</strong> ${radii.fireballRadius.toFixed(1)} m</p>
+        <p><strong>Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m</p>
+        <p><strong>Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m</p>
+        <p><strong>Thermal Radiation Radius:</strong> ${radii.thermalRadius.toFixed(1)} m</p>
+        <p><strong>Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m</p>
+    `;
+});
 
-    // Add explosion effects and descriptions
-    const effects = [
-        {
-            radius: fireballRadius,
-            color: 'red',
-            description: `
-                <strong>Fireball radius:</strong> ${fireballRadius.toFixed(1)} m (${calculateArea(fireballRadius)} km²).<br>
-                Maximum size of the nuclear fireball; anything inside the fireball is effectively vaporized.
-            `
-        },
-        {
-            radius: heavyBlastRadius,
-            color: 'orange',
-            description: `
-                <strong>Heavy blast damage radius (20 psi):</strong> ${heavyBlastRadius.toFixed(1)} m (${calculateArea(heavyBlastRadius)} km²).<br>
-                Heavily built concrete buildings are severely damaged; fatalities approach 100%.
-            `
-        },
-        {
-            radius: moderateBlastRadius,
-            color: 'yellow',
-            description: `
-                <strong>Moderate blast damage radius (5 psi):</strong> ${moderateBlastRadius.toFixed(1)} m (${calculateArea(moderateBlastRadius)} km²).<br>
-                Most residential buildings collapse; widespread fatalities and high risk of fires.
-            `
-        },
-        {
-            radius: thermalRadius,
-            color: 'purple',
-            description: `
-                <strong>Thermal radiation radius (3rd degree burns):</strong> ${thermalRadius.toFixed(1)} m (${calculateArea(thermalRadius)} km²).<br>
-                Causes severe burns, possible amputation, and 100% probability of 3rd-degree burns.
-            `
-        },
-        {
-            radius: lightBlastRadius,
-            color: 'green',
-            description: `
-                <strong>Light blast damage radius (1 psi):</strong> ${lightBlastRadius.toFixed(1)} m (${calculateArea(lightBlastRadius)} km²).<br>
-                Windows shatter; many injuries caused by flying glass.
-            `
+// Clear all button
+clearAllButton.addEventListener("click", () => {
+    map.eachLayer(layer => {
+        if (layer instanceof L.Circle) {
+            map.removeLayer(layer);
         }
-    ];
-
-    let descriptions = '';
-    effects.forEach(effect => {
-        const circle = L.circle(marker.getLatLng(), { radius: effect.radius, color: effect.color, fillOpacity: 0.2 }).addTo(map);
-        explosionCircles.push(circle);
-        descriptions += `<li><span style="color:${effect.color};">${effect.description}</span></li>`;
     });
-
-    // Update detonation details
-    document.getElementById('detonation-details').innerHTML = descriptions;
-    document.getElementById('detonation-info').style.display = 'block';
-}
+    detailsDiv.innerHTML = "";
+});
