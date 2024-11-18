@@ -130,7 +130,7 @@ body {
 /* Footer */
 #footer {
     position: absolute;
-    bottom: 10px;
+    bottom: 30px;
     right: 10px;
     font-size: 14px;
     color: gray;  /* Regular color for footer in light mode */
