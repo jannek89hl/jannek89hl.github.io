@@ -1,8 +1,8 @@
 // Initialize the map
 const map = L.map('map', {
     crs: L.CRS.Simple,
-    minZoom: -2,
-    maxZoom: 2,
+    minZoom: -4,
+    maxZoom: 5,
 });
 
 const bounds = [[0, 0], [2200, 2200]];
@@ -123,7 +123,7 @@ detonateButton.addEventListener("click", () => {
     <span style="color: red;">${getExplosionDescription(radii.fireballRadius)}</span></p>
     <p><strong style="color: orange;">Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m<br>
     <span style="color: orange;">${getExplosionDescription(radii.heavyBlastRadius)}</span></p>
-    <p><strong style="color: yellow;">Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m<br>
+    <p><strong style="color: #FFD700;">Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m<br>
     <span style="color: #FFD700;">${getExplosionDescription(radii.moderateBlastRadius)}</span></p>
     <p><strong style="color: purple;">Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m<br>
     <span style="color: purple;">${getExplosionDescription(radii.thermalRadiationRadius)}</span></p>
@@ -136,4 +136,20 @@ detonateButton.addEventListener("click", () => {
 clearAllButton.addEventListener("click", () => {
     clearExplosions();
     detailsDiv.innerHTML = "";
+});
+
+// Add light/dark mode toggle at the very end
+const toggleButton = document.getElementById("toggle-theme");
+let isDarkMode = false;
+
+toggleButton.addEventListener("click", () => {
+    isDarkMode = !isDarkMode;
+
+    if (isDarkMode) {
+        document.body.classList.add("dark-mode");
+        toggleButton.textContent = "Switch to Light Mode";
+    } else {
+        document.body.classList.remove("dark-mode");
+        toggleButton.textContent = "Switch to Dark Mode";
+    }
 });
