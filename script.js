@@ -15,8 +15,8 @@ map.fitBounds(bounds);
 // Marker setup with increased size
 const markerIcon = L.icon({
     iconUrl: 'marker-icon.png', // Use a larger marker icon file here
-    iconSize: [62, 95], // Increased marker size
-    iconAnchor: [31, 95],
+    iconSize: [41, 63], // Increased marker size
+    iconAnchor: [20.5, 63],
 });
 const marker = L.marker([1100, 1100], { draggable: true, icon: markerIcon }).addTo(map);
 marker.bindPopup("Drag me to set the explosion center!").openPopup();
