@@ -27,19 +27,28 @@ body {
 }
 
 #sidebar h1 {
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 22px;
+    margin-bottom: 15px;
 }
 
 #sidebar label {
+    font-size: 16px;
     font-weight: bold;
     display: block;
     margin: 10px 0 5px;
 }
 
+#sidebar select,
+#sidebar input {
+    font-size: 16px;
+    padding: 5px;
+    width: 100%;
+}
+
 #sidebar button {
     margin-top: 10px;
-    padding: 10px 20px;
+    padding: 12px 20px;
+    font-size: 16px;
     background-color: #0078D7;
     color: white;
     border: none;
@@ -53,5 +62,5 @@ body {
 
 #details {
     margin-top: 20px;
-    font-size: 14px;
+    font-size: 16px;
 }
