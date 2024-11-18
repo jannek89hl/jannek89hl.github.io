@@ -76,7 +76,7 @@ function drawExplosion(center, radii) {
 
     explosionLayers.push(L.circle(center, { radius: metersToPixels(radii.fireballRadius), color: 'red', fillOpacity: 0.5 }).addTo(map));
     explosionLayers.push(L.circle(center, { radius: metersToPixels(radii.heavyBlastRadius), color: 'orange', fillOpacity: 0.4 }).addTo(map));
-    explosionLayers.push(L.circle(center, { radius: metersToPixels(radii.moderateBlastRadius), color: 'yellow', fillOpacity: 0.3 }).addTo(map));
+    explosionLayers.push(L.circle(center, { radius: metersToPixels(radii.moderateBlastRadius), color: '#FFD700', fillOpacity: 0.3 }).addTo(map));
     explosionLayers.push(L.circle(center, { radius: metersToPixels(radii.thermalRadiationRadius), color: 'purple', fillOpacity: 0.2 }).addTo(map));
     explosionLayers.push(L.circle(center, { radius: metersToPixels(radii.lightBlastRadius), color: 'blue', fillOpacity: 0.1 }).addTo(map));
 
@@ -124,7 +124,7 @@ detonateButton.addEventListener("click", () => {
     <p><strong style="color: orange;">Heavy Blast Radius:</strong> ${radii.heavyBlastRadius.toFixed(1)} m<br>
     <span style="color: orange;">${getExplosionDescription(radii.heavyBlastRadius)}</span></p>
     <p><strong style="color: yellow;">Moderate Blast Radius:</strong> ${radii.moderateBlastRadius.toFixed(1)} m<br>
-    <span style="color: yellow;">${getExplosionDescription(radii.moderateBlastRadius)}</span></p>
+    <span style="color: #FFD700;">${getExplosionDescription(radii.moderateBlastRadius)}</span></p>
     <p><strong style="color: purple;">Thermal Radiation Radius:</strong> ${radii.thermalRadiationRadius.toFixed(1)} m<br>
     <span style="color: purple;">${getExplosionDescription(radii.thermalRadiationRadius)}</span></p>
     <p><strong style="color: blue;">Light Blast Radius:</strong> ${radii.lightBlastRadius.toFixed(1)} m<br>
