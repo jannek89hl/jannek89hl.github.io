@@ -130,11 +130,11 @@ body {
 /* Footer */
 #footer {
     position: absolute;
-    bottom: 20px;  /* Increase the value to move the text further down */
-    right: 10px;
+    top: 20px;  /* Distance from the top of the page */
+    right: 10px;  /* Distance from the right edge of the page */
     font-size: 14px;
     color: gray;  /* Regular color for footer in light mode */
-    z-index: 1001;  /* Ensures it stays above map and other elements */
+    z-index: 1001;  /* Ensure it stays above other elements like the map */
 }
 
 /* Footer in Dark Mode */
