@@ -24,12 +24,13 @@ body {
     box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
     z-index: 1000;
-    font-size: 18px; /* Increased text size */
+    font-size: 20px; /* Increased text size */
+    line-height: 1.6;
 }
 
 #sidebar h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 28px; /* Larger title */
+    margin-bottom: 15px;
 }
 
 #sidebar label {
@@ -40,20 +41,25 @@ body {
 
 #sidebar button {
     margin-top: 10px;
-    padding: 12px 25px;
+    padding: 15px 25px;
     background-color: #0078D7;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 #sidebar button:hover {
     background-color: #005A9E;
 }
 
-#details {
-    margin-top: 20px;
-    font-size: 16px; /* Larger description text */
+#details h3 {
+    font-size: 22px; /* Larger section titles */
+    margin-bottom: 10px;
+}
+
+#details p {
+    font-size: 18px; /* Increased text size for details */
+    margin: 5px 0;
 }
