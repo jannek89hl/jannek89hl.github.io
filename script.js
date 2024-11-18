@@ -19,7 +19,7 @@ const markerIcon = L.icon({
     iconAnchor: [20.5, 63],
 });
 const marker = L.marker([1100, 1100], { draggable: true, icon: markerIcon }).addTo(map);
-marker.bindPopup("Drag me to set the explosion center!").openPopup();
+marker.bindPopup("Drag me to set the explosion center!", { offset: [0, -30] }).openPopup();
 
 // GUI elements
 const presetSelect = document.getElementById("preset");
